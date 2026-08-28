@@ -1,0 +1,23 @@
+name: Daily Match House sheet sync
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 03:09 UTC = ~4:09am UK time while BST (UTC+1) is in effect.
+    # GitHub Actions cron is always UTC — once BST ends (late October) this
+    # needs bumping to "9 4 * * *" to stay at 4am UK (GMT, UTC+0) local time.
+    - cron: "9 3 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+      - run: node match-house-sync.mjs
+        env:
+          META_TOKEN: ${{ secrets.META_TOKEN_MATCH_HOUSE }}
+          GOOGLE_SHEETS_SERVICE_ACCOUNT_B64: ${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT_B64 }}
