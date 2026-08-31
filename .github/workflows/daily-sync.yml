@@ -1,7 +1,11 @@
 name: Daily Kredo sheet sync
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Backfill a specific date (YYYY-MM-DD) instead of yesterday"
+        required: false
   schedule:
     # 03:07 UTC = ~4:07am UK time while BST (UTC+1) is in effect.
     # GitHub Actions cron is always UTC — once BST ends (late October) this
@@ -21,3 +25,4 @@ jobs:
         env:
           META_TOKEN: ${{ secrets.META_TOKEN }}
           GOOGLE_SHEETS_SERVICE_ACCOUNT_B64: ${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT_B64 }}
+          TARGET_DATE: ${{ inputs.date }}
