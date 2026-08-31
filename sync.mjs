@@ -9,6 +9,7 @@ const LEAD_ACTION_TYPES = new Set(["omni_purchase", "lead"]);
 const SHEETS_EPOCH_UTC_MS = Date.UTC(1899, 11, 30);
 
 function ukYesterdayDateString() {
+  if (process.env.TARGET_DATE) return process.env.TARGET_DATE;
   const now = new Date();
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Europe/London",
@@ -105,6 +106,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("FAILED:", err.message);
+  console.error("FAILED:", err.message, err.cause ?? "");
   process.exit(1);
 });
